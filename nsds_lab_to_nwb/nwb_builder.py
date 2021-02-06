@@ -8,7 +8,7 @@ import pytz
 from pynwb import NWBHDF5IO, NWBFile
 from pynwb.file import Subject
 
-from nsds_lab_to_nwb.common.data_scanner import DataScanner
+from nsds_lab_to_nwb.common.data_scanner import AuditoryDataScanner, BehaviorDataScanner
 from nsds_lab_to_nwb.metadata.metadata_manager import MetadataManager
 
 from nsds_lab_to_nwb.components.device.device_originator import DeviceOriginator
@@ -52,7 +52,13 @@ class NWBBuilder:
         self.experiment_type = self.metadata['experiment_type'] # now required
         
         # scan data_path and identify relevant subdirectories
-        self.dataset = self.scan_input_dataset()
+        if self.experiment_type == 'auditory':
+            data_scanner = AuditoryDataScanner(
+                self.animal_name, self.block, data_path=self.data_path)
+        elif self.experiment_type == 'behavior':
+            data_scanner = BehaviorDataScanner(
+                self.animal_name, self.block, data_path=self.data_path)
+        self.dataset = data_scanner.extract_dataset()
 
         # prepare output path
         rat_out_dir = os.path.join(self.out_path, self.animal_name)
@@ -73,33 +79,6 @@ class NWBBuilder:
             pass
         else:
             raise ValueError('unknown experiment type')
-
-    def scan_input_dataset(self):
-        ''' scan data_path and identify relevant input subdirectories.
-        TODO: confirm/standardize subdirectory structure
-        '''
-        if self.experiment_type == 'auditory':
-            # (for now specific to example dataset)
-            stim_path = os.path.join(self.data_path, 'Stimulus/')
-            htk_path = os.path.join(self.data_path, 'RatArchive/')
-            tdt_path = os.path.join(self.data_path, 'TTankBackup/')
-            experiment_specific_paths = dict(
-                stim_path=stim_path,
-                htk_path=htk_path,
-                tdt_path=tdt_path,
-            )
-        elif self.experiment_type == 'behavior':
-            # TODO: collect and pass relevant subdirectories. maybe video_path?
-            experiment_specific_paths = dict(
-                # video_path=video_path,
-            )
-        
-        # scan and check input data files
-        data_scanner = DataScanner(self.animal_name, self.block,
-                                data_path=self.data_path,
-                                **experiment_specific_paths)
-        dataset = data_scanner.extract_dataset()
-        return dataset
 
     def build(self, use_htk=False):
         '''Build NWB file content.
