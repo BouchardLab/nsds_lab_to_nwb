@@ -25,10 +25,12 @@ class MetadataManager:
         if self.animal_name is None:
             self.animal_name = self.block_name.split('_')[0]
 
-        self.yaml_lib_path = os.path.join(self.library_path, self.experiment_type,
-                                'yaml/')
-        self.stim_lib_path = os.path.join(self.library_path, self.experiment_type,
-                                'configs_legacy/mars_configs/') # <<<< should move to a better subfolder
+        # paths to metadata/stimulus library
+        self.yaml_lib_path = os.path.join(self.library_path, self.experiment_type, 'yaml/')
+        if self.experiment_type == 'auditory':
+            self.stim_lib_path = os.path.join(self.library_path, self.experiment_type,
+                    'configs_legacy/mars_configs/') # <<<< should move to a better subfolder
+
         self.metadata = self.extract_metadata()
 
     def read_block_metadata_file(self, default_experiment_type=_DEFAULT_EXPERIMENT_TYPE):
@@ -53,6 +55,8 @@ class MetadataManager:
                 self.expand_device(metadata, value)
                 continue
             if key == 'stimulus':
+                if self.experiment_type != 'auditory':
+                    raise ValueError('experiment type mismatch')
                 self.expand_stimulus(metadata, value)
                 continue
             # else:
