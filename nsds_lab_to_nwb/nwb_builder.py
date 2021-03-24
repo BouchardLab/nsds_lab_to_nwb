@@ -81,13 +81,15 @@ class NWBBuilder:
         else:
             raise ValueError('unknown experiment type')
 
-    def build(self, use_htk=False):
+    def build(self, use_htk=False, process_stim=True):
         '''Build NWB file content.
 
         Parameters
         ----------
         use_htk: applicable for auditory datasets only.
                 if False, use HTK files. if True, use TDT files directly.
+        process_stim: (bool) default is True. optionally skip stimulus processing
+                while developing/testing other features (temporary switch)
 
         Returns:
         --------
@@ -127,7 +129,10 @@ class NWBBuilder:
                 self.htk_originator.make(nwb_content, electrode_table_regions)
             else:
                 self.tdt_originator.make(nwb_content, electrode_table_regions)
-            self.stimulus_originator.make(nwb_content)
+
+            if process_stim:
+                self.stimulus_originator.make(nwb_content)
+
         elif self.experiment_type == 'behavior':
             # TODO: implement as needed
             pass
