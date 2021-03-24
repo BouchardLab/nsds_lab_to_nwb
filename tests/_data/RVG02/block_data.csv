@@ -1,0 +1,21 @@
+block_id,ecog,poly,stim,ecog_lat_loc,ecog_post_loc,poly_ap_loc,poly_dev_loc,clean_block,stim_response,notes
+01,TRUE,FALSE,White noise,,,,,TRUE,,"We saw responses just prior using the ‘clap test’, but nothing super obvious during the white noise"
+02,TRUE,FALSE,Tone diagnostic,,,,,TRUE,,Maybe saw a few responses -- noticed time delay b/w stim and markers. Saw broad responses across frequency for 50% of electrodes. Unclear whether responses are physiological. (Stim response = OK?)
+03,TRUE,FALSE,Tone diagnostic,,,,,TRUE,,Injected ketamine before bc of animal response. Saw more response but again still broad for about 50% of the grid. The middle diagonal only has high amplitude / frequency responses (Stim response = OK?)
+04,TRUE,FALSE,Full tone,,,,,TRUE,,Saw good amount of responses
+05,TRUE,TRUE,White noise,,,,,TRUE,,Good poly spikes in channel 36
+06,TRUE,TRUE,Tone diagnostic,,,,,FALSE,,(Fail) script issue
+07,TRUE,TRUE,Tone diagnostic,,,,,TRUE,,Saw broad responses across frequency for 50% of electrodes.
+08,TRUE,TRUE,Timit998,,,,,TRUE,,"Lots of polytrode signal spikes, few ECoG responses"
+09,TRUE,TRUE,Full tone,,,,,TRUE,,"Lots of polytrode signal spikes, few ECoG responses"
+10,FALSE,FALSE,,,,,,FALSE,,
+11,FALSE,FALSE,,,,,,FALSE,,
+12,FALSE,FALSE,,,,,,FALSE,,
+13,FALSE,FALSE,,,,,,FALSE,,
+14,FALSE,FALSE,,,,,,FALSE,,
+15,FALSE,FALSE,,,,,,FALSE,,
+16,FALSE,FALSE,,,,,,FALSE,,
+17,FALSE,FALSE,,,,,,FALSE,,
+18,FALSE,FALSE,,,,,,FALSE,,
+19,FALSE,FALSE,,,,,,FALSE,,
+20,FALSE,FALSE,,,,,,FALSE,,

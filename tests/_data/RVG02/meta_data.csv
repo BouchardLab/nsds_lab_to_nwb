@@ -1,0 +1,21 @@
+key,value
+experimenter,Vanessa Gutierrez
+lab,Bouchard Lab
+institution,Lawrence Berkeley National Lab
+date,"March 10, 2021"
+time,9:10
+animal_number,02
+animal_name,RVG02
+gender,M
+weight,470
+pharmacology,Anesthesized with Ketamine (90 mg/kg induction and 55 mg/kg maintence) and Xyzaline (10 mg/kg induction and 5 mg/kg maintence)
+surgery,Right temporal lobe craniotomy w/ durotomy
+surgery_outcome,Good
+surgery_notes,The surgery was perfect. I'm an all star. I'm going to quit and be a neurosurgeon
+experiment_description,Craniotomy site was relatively clean. Small bleed on middle of brain surface and bottom right corner. 1mL SQ sterile saline administered every 2 hours. Oxygen supply at .8L/min.
+ecog_type,ecog128
+ecog_serial,"W6,D35"
+ecog_acq,TDT PZM5
+poly_type,camb64
+poly_serial,5501
+poly_acq,TDT PZM5
