@@ -9,11 +9,11 @@ class MarkTokenizer():
         self.stim_configs = stim_configs
 
         stim_name = self.stim_configs['name']
-        if stim_name == 'tone' or stim_name == 'tone150':
+        if 'tone' in stim_name:
             self.tokenizer = ToneTokenizer(self.block_name, self.stim_configs)
-        elif stim_name == 'timit':
+        elif 'timit' in stim_name:
             self.tokenizer = TIMITTokenizer(self.block_name, self.stim_configs)
-        elif stim_name[:2] == 'wn':
+        elif 'wn' in stim_name:
             self.tokenizer = WNTokenizer(self.block_name, self.stim_configs)
         else:
             raise ValueError('unknown stimulus type')
