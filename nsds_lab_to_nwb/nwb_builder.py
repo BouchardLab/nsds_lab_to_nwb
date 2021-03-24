@@ -40,10 +40,16 @@ class NWBBuilder:
             animal_name: str,
             block: str,
             nwb_metadata: MetadataManager,
+            stim_path: str = '',
+            tdt_path: str = '',
+            htk_path: str = '',
             out_path: str = '',
             session_start_time = _DEFAULT_SESSION_START_TIME
     ):
         self.data_path = data_path
+        self.stim_path = stim_path
+        self.htk_path = htk_path
+        self.tdt_path = tdt_path
         self.animal_name = animal_name
         self.block = block
         self.metadata = nwb_metadata.metadata
@@ -55,7 +61,13 @@ class NWBBuilder:
         # scan data_path and identify relevant subdirectories
         if self.experiment_type == 'auditory':
             data_scanner = AuditoryDataScanner(
-                self.animal_name, self.block, data_path=self.data_path)
+                self.animal_name,
+                self.block,
+                data_path=self.data_path,
+                stim_path=self.stim_path,
+                htk_path=self.htk_path,
+                tdt_path=self.tdt_path,
+            )
         elif self.experiment_type == 'behavior':
             data_scanner = BehaviorDataScanner(
                 self.animal_name, self.block, data_path=self.data_path)

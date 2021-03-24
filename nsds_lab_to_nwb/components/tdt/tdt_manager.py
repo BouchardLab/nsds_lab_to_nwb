@@ -52,7 +52,7 @@ class TdtManager():
         - e_series: (ElectricalSeries) to be added to the NWB file
         '''
         if device_name not in self.tdt_streams:
-            error_message = 'Device or stream not found. Available streams: '
+            error_message = 'Device or stream not found: {}. Available streams: '.format(device_name)
             for stream in self.tdt_streams:
                 error_message += stream + ', '
             # raise AttributeError(error_message)
