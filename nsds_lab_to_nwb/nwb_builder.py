@@ -15,9 +15,8 @@ from nsds_lab_to_nwb.metadata.metadata_manager import MetadataManager
 from nsds_lab_to_nwb.components.device.device_originator import DeviceOriginator
 from nsds_lab_to_nwb.components.electrode.electrode_groups_originator import ElectrodeGroupsOriginator
 from nsds_lab_to_nwb.components.electrode.electrodes_originator import ElectrodesOriginator
-from nsds_lab_to_nwb.components.htk.htk_originator import HtkOriginator
+from nsds_lab_to_nwb.components.neural_data.neural_data_originator import NeuralDataOriginator
 from nsds_lab_to_nwb.components.stimulus.stimulus_originator import StimulusOriginator
-from nsds_lab_to_nwb.components.tdt.tdt_originator import TdtOriginator
 
 
 path = os.path.dirname(os.path.abspath(__file__))
@@ -54,36 +53,33 @@ class NWBBuilder:
 
         self.experiment_type = self.metadata['experiment_type'] # now required
 
-        # scan data_path and identify relevant subdirectories
-        if self.experiment_type == 'auditory':
-            data_scanner = AuditoryDataScanner(
-                self.animal_name, self.block, data_path=self.data_path)
-        elif self.experiment_type == 'behavior':
-            data_scanner = BehaviorDataScanner(
-                self.animal_name, self.block, data_path=self.data_path)
-        self.dataset = data_scanner.extract_dataset()
+        logger.info('Collecting relevant input data paths...')
+        self.dataset = self._collect_dataset_paths()
 
-        # prepare output path
+        logger.info('Preparing output path...')
         rat_out_dir = os.path.join(self.out_path, self.animal_name)
         os.makedirs(rat_out_dir, exist_ok=True)
         self.output_file = os.path.join(rat_out_dir,
                                 self.animal_name + '_' + self.block + '.nwb')
 
-        # create originator instances
+        logger.info('Creating originator instances...')
         self.device_originator = DeviceOriginator(self.metadata)
         self.electrode_groups_originator = ElectrodeGroupsOriginator(self.metadata)
         self.electrodes_originator = ElectrodesOriginator(self.metadata)
+        self.neural_data_originator = NeuralDataOriginator(self.dataset, self.metadata, use_htk=self.use_htk)
+        self.stimulus_originator = StimulusOriginator(self.dataset, self.metadata)
+
+
+    def _collect_dataset_paths(self):
+        # scan data_path and identify relevant subdirectories
         if self.experiment_type == 'auditory':
-            if self.use_htk:
-                self.htk_originator = HtkOriginator(self.dataset, self.metadata)
-            else:
-                self.tdt_originator = TdtOriginator(self.dataset, self.metadata)
-            self.stimulus_originator = StimulusOriginator(self.dataset, self.metadata)
+            data_scanner = AuditoryDataScanner(
+                self.animal_name, self.block, data_path=self.data_path)
         elif self.experiment_type == 'behavior':
-            # TODO: implement originators as needed
-            pass
+            raise ValueError('behavior data not yet supported.')
         else:
             raise ValueError('unknown experiment type')
+        return data_scanner.extract_dataset()
 
     def build(self, process_stim=True):
         '''Build NWB file content.
@@ -123,23 +119,19 @@ class NWBBuilder:
             surgery=self.metadata.get('surgery', None),
         )
 
+        logger.info('Adding hardware information...')
         self.device_originator.make(nwb_content)
         self.electrode_groups_originator.make(nwb_content)
         electrode_table_regions = self.electrodes_originator.make(nwb_content)
 
-        if self.experiment_type == 'auditory':
-            if self.use_htk:
-                # legacy pipeline
-                self.htk_originator.make(nwb_content, electrode_table_regions)
-            else:
-                self.tdt_originator.make(nwb_content, electrode_table_regions)
+        logger.info('Adding neural data...')
+        self.neural_data_originator.make(nwb_content, electrode_table_regions)
 
-            if process_stim:
-                self.stimulus_originator.make(nwb_content)
-
-        elif self.experiment_type == 'behavior':
-            # TODO: implement as needed
-            pass
+        if process_stim:
+            logger.info('Adding stimulus...')
+            self.stimulus_originator.make(nwb_content)
+        else:
+            logger.info('Skipping stimulus...')
 
         return nwb_content
 
