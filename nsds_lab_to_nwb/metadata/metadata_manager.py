@@ -5,7 +5,7 @@ import yaml
 import csv
 import pandas as pd
 
-from nsds_lab_to_nwb.metadata.stim_value_extractor import StimValueExtractor
+# from nsds_lab_to_nwb.components.stimulus.stim_value_extractor import StimValueExtractor
 
 _DEFAULT_EXPERIMENT_TYPE = 'auditory' # for legacy sessions
 
@@ -205,7 +205,10 @@ class MetadataManager:
                             self.yaml_lib_path, key, filename + '.yaml'))
         elif isinstance(filename, dict):
             ref_data = filename
-        self.__load_stim_values(ref_data)
+
+        # self.__load_stim_values(ref_data) # <<< now moved to WavManager
+        ref_data['stim_lib_path'] = self.stim_lib_path # pass stim library path (ad hoc)
+
         metadata[key] = ref_data
 
     def __check_subject(self, metadata):
@@ -230,12 +233,11 @@ class MetadataManager:
         '''load stim_values from .mat or .csv files,
         or generate using original script (mars/configs/block_directory.py)
         '''
-        if not ('stim_values' in stimulus_metadata):
-            stimulus_metadata['stim_values'] = None
-            return
-        stimulus_metadata['stim_values'] = StimValueExtractor(
-            stimulus_metadata['stim_values'], self.stim_lib_path
-            ).extract()
+        # --- skip this for now; extract in NWB builder if necessary ---
+        # stimulus_metadata['stim_values'] = StimValueExtractor(
+        #     stimulus_metadata['stim_values'], self.stim_lib_path
+        #     ).extract()
+        pass
 
 
     @staticmethod
