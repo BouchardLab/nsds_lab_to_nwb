@@ -7,7 +7,7 @@ class HtkManager():
     def __init__(self, raw_path):
         self.raw_path = raw_path
 
-    def extract_raw_htk(self, device_name, dev_conf, electrode_table_region):
+    def extract(self, device_name, dev_conf, electrode_table_region):
         ''' adapted from mars.HTKNWB.add_raw_htk
         now manages one device at a time
         '''

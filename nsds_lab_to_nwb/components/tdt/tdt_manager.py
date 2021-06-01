@@ -2,7 +2,7 @@ from nsds_lab_to_nwb.components.tdt.tdt_reader import TDTReader
 from pynwb.ecephys import ElectricalSeries
 
 class TdtManager(TDTReader):    
-    def extract_tdt(self, device_name, dev_conf, electrode_table_region):
+    def extract(self, device_name, dev_conf, electrode_table_region):
         '''
         extracts TDT data for a single device, and returns an ElectricalSeries.
 
