@@ -25,9 +25,10 @@ path = os.path.dirname(os.path.abspath(__file__))
 logging.config.fileConfig(fname=str(path) + '/logging.conf', disable_existing_loggers=False)
 logger = logging.getLogger(__name__)
 
+LOCAL_TIMEZONE = pytz.timezone('US/Pacific')
 
 #TODO: GET ACCURATE START TIME
-_DEFAULT_SESSION_START_TIME = datetime.fromtimestamp(0, pytz.utc) # dummy value for now
+_DEFAULT_SESSION_START_TIME = datetime.fromtimestamp(0, tz=LOCAL_TIMEZONE) # dummy value for now
 
 
 class NWBBuilder:
@@ -100,6 +101,8 @@ class NWBBuilder:
         nwb_content: an NWBFile object.
         '''
         logger.info('Building components for NWB')
+        current_time = datetime.now(tz=pytz.utc).astimezone(LOCAL_TIMEZONE)
+
         block_name = self.metadata['block_name']
         nwb_content = NWBFile(
             session_description=self.metadata['session_description'], # 'foo',
@@ -107,7 +110,7 @@ class NWBBuilder:
             lab=self.metadata['lab'],
             institution=self.metadata['institution'],
             session_start_time = self.session_start_time,
-            file_create_date=datetime.now(),
+            file_create_date=current_time,
             identifier=str(uuid.uuid1()), # block_name,
             session_id=block_name,
             experiment_description=self.metadata['experiment_description'],
