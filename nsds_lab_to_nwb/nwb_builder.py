@@ -9,7 +9,7 @@ import pytz
 from pynwb import NWBHDF5IO, NWBFile
 from pynwb.file import Subject
 
-from nsds_lab_to_nwb.inputs.data_scanners import AuditoryDataScanner
+from nsds_lab_to_nwb.common.data_scanners import AuditoryDataScanner
 from nsds_lab_to_nwb.metadata.metadata_manager import MetadataManager
 
 from nsds_lab_to_nwb.components.device.device_originator import DeviceOriginator
