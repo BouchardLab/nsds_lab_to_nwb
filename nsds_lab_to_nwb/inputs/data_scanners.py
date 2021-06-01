@@ -1,7 +1,41 @@
+import logging.config
 import os
 
-from nsds_lab_to_nwb.common.dataset import Dataset
-from nsds_lab_to_nwb.common.data_scanner import DataScanner
+logger = logging.getLogger(__name__)
+
+
+class Dataset():
+    '''
+    The Dataset class is just a convenient namespace for all the relevant paths
+    where the input data can be found.
+    See the DataScanner classes for how the Dataset is constructed.
+    '''
+    def __init__(self, data_path, animal_name, block, **path_kwargs):
+        self.data_path = data_path
+        self.animal_name = animal_name
+        self.block = block
+
+        # store all paths
+        for path_key, path_value in path_kwargs.items():
+            setattr(self, path_key, path_value)
+
+
+class DataScanner():
+    '''
+    Defines input path structure and stores relevant paths in a Dataset object.
+    This is a base class for AuditoryDataScanner and BehaviorDataScanner classes.
+    '''
+    def __init__(self, animal_name, block,
+                 data_path: str = '',
+                 ):
+        self.data_path = data_path
+        self.animal_name = animal_name
+        self.block = block
+
+    def extract_dataset(self):
+        ''' returns a Dataset object '''
+        # should be implemented for the specific experiment type
+        raise NotImplementedError()
 
 
 class AuditoryDataScanner(DataScanner):
@@ -14,6 +48,7 @@ class AuditoryDataScanner(DataScanner):
         DataScanner.__init__(self, animal_name, block, data_path=data_path)
         # this sets self.animal_name, self.block, and self.data_path
 
+        logger.info('AuditoryDataScanner: Using hard-coded subdirectories...')
         # detect relevant subdirectories for auditory dataset
         # use default subdirectory name, or override by input
         # ******* TODO: confirm/standardize subdirectory structure *******
@@ -46,3 +81,19 @@ class AuditoryDataScanner(DataScanner):
     def add_block_subdir(self, path):
         return os.path.join(path, self.animal_name,
                             self.animal_name + '_' + self.block + '/')
+
+
+class BehaviorDataScanner(DataScanner):
+    def __init__(self, animal_name, block,
+                 data_path: str = '',
+                 video_path=None,
+                 ):
+        DataScanner.__init__(self, animal_name, block, data_path=data_path)
+        # this sets self.animal_name, self.block, and self.data_path
+
+        # TODO: collect and pass relevant subdirectories. maybe video_path?
+        self.video_path = video_path or os.path.join(self.data_path, 'Video/') # <<<< replace accordingly
+
+    def extract_dataset(self):
+        # TODO for behavior (reaching) data
+        raise NotImplementedError()
