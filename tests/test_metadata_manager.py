@@ -25,6 +25,7 @@ class TestCase_MetadataManager(unittest.TestCase):
         library_path = os.path.join(USER_HOME, 'Src/NSDSLab-NWB-metadata/')
         nwb_metadata = MetadataManager(block_metadata_path=block_metadata_path,
                                        library_path=library_path)
+        nwb_metadata.extract_metadata()
 
     def test_metadata_manager_case2_new_data(self):
         ''' detect/collect metadata needed to build the NWB file '''
@@ -37,6 +38,7 @@ class TestCase_MetadataManager(unittest.TestCase):
         nwb_metadata = MetadataManager(block_name=block_name,
                                        block_metadata_path=block_metadata_path,
                                        library_path=library_path)
+        nwb_metadata.extract_metadata()
 
 if __name__ == '__main__':
     unittest.main()

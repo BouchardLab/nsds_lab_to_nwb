@@ -37,7 +37,6 @@ class MetadataManager:
         #             'configs_legacy/mars_configs/') # <<<< should move to a better subfolder
         self.stim_lib_path = stim_lib_path
 
-        self.metadata = self.extract_metadata()
 
     def __detect_which_pipeline(self):
         # detect which pipeline is used

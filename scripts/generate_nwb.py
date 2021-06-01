@@ -24,20 +24,15 @@ out_path = os.path.join(USER_HOME, 'Data/nwb_test/')
 
 # link to metadata files
 block_metadata_path = os.path.join(PWD, f'../yaml/{animal_name}/{animal_name}_{block}.yaml')
-library_path = os.path.join(USER_HOME, 'Src/NSDSLab-NWB-metadata/')
-
-
-# --- collect metadata needed to build the NWB file ---
-
-block_name = '{}_{}'.format(animal_name, block)
-nwb_metadata = MetadataManager(
-                    block_name=block_name, # required for new pipeline
-                    block_metadata_path=block_metadata_path,
-                    library_path=library_path
-                    )
+metadata_lib_path = os.path.join(USER_HOME, 'Src/NSDSLab-NWB-metadata/')
+stim_lib_path = None # not used
+# stim_lib_path = os.path.join(metadata_lib_path, 'auditory',
+#         'configs_legacy/mars_configs/') # <<<< should move to a stable location
 
 
 # --- build NWB file for the specified block ---
+
+# NOTE: metadata collection is now done in NWBBuilder.__init__()
 
 # create a builder for the block
 nwb_builder = NWBBuilder(
@@ -45,8 +40,10 @@ nwb_builder = NWBBuilder(
                 block=block,
                 data_path=data_path,
                 out_path=out_path,
-                nwb_metadata=nwb_metadata,
-                use_htk=True # for testing HTK pipeline (default is False)
+                block_metadata_path=block_metadata_path,
+                metadata_lib_path=metadata_lib_path,
+                stim_lib_path=stim_lib_path,
+                #use_htk=True # for testing HTK pipeline (default is False)
                 )
 
 # build the NWB file content
@@ -54,4 +51,3 @@ nwb_content = nwb_builder.build()
 
 # write to file
 nwb_builder.write(nwb_content)
-

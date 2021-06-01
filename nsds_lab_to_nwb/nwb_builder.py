@@ -39,23 +39,30 @@ class NWBBuilder:
 
     def __init__(
             self,
-            data_path: str,
             animal_name: str,
             block: str,
-            nwb_metadata: MetadataManager,
-            out_path: str = '',
+            data_path: str,
+            out_path: str,
+            block_metadata_path: str,
+            metadata_lib_path: str = '',
+            stim_lib_path: str = '',
             session_start_time = _DEFAULT_SESSION_START_TIME,
             use_htk = False
     ):
         self.data_path = data_path
         self.animal_name = animal_name
         self.block = block
-        self.metadata = nwb_metadata.metadata
         self.out_path = out_path
+        self.block_metadata_path = block_metadata_path
+        self.metadata_lib_path = metadata_lib_path
+        self.stim_lib_path = stim_lib_path
         self.session_start_time = session_start_time
         self.use_htk = use_htk
 
-        self.experiment_type = self.metadata['experiment_type'] # now required
+        logger.info('Collecting metadata for NWB conversion...')
+        self.metadata = self._collect_nwb_metadata(block_metadata_path,
+                                            metadata_lib_path, stim_lib_path)
+        self.experiment_type = self.metadata['experiment_type']
 
         logger.info('Collecting relevant input data paths...')
         self.dataset = self._collect_dataset_paths()
@@ -73,6 +80,18 @@ class NWBBuilder:
         self.neural_data_originator = NeuralDataOriginator(self.dataset, self.metadata, use_htk=self.use_htk)
         self.stimulus_originator = StimulusOriginator(self.dataset, self.metadata)
 
+    def _collect_nwb_metadata(self, block_metadata_path,
+                                    metadata_lib_path,
+                                    stim_lib_path):
+        # collect metadata for NWB conversion
+        block_name = '{}_{}'.format(self.animal_name, self.block)
+        self.metadata_manager = MetadataManager(
+                            block_name=block_name, # required for new pipeline
+                            block_metadata_path=block_metadata_path,
+                            library_path=metadata_lib_path,
+                            stim_lib_path=stim_lib_path
+                            )
+        return self.metadata_manager.extract_metadata()
 
     def _collect_dataset_paths(self):
         # scan data_path and identify relevant subdirectories
