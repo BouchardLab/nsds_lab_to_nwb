@@ -17,6 +17,7 @@ class MetadataManager:
     def __init__(self,
                  block_metadata_path: str,
                  library_path: str,
+                 stim_lib_path = None,
                  block_name = None,
                  animal_name = None
                  ):
@@ -31,9 +32,10 @@ class MetadataManager:
 
         # paths to metadata/stimulus library
         self.yaml_lib_path = os.path.join(self.library_path, self.experiment_type, 'yaml/')
-        if self.experiment_type == 'auditory':
-            self.stim_lib_path = os.path.join(self.library_path, self.experiment_type,
-                    'configs_legacy/mars_configs/') # <<<< should move to a better subfolder
+        # if (stim_lib_path is None) and (self.experiment_type == 'auditory'):
+        #     stim_lib_path = os.path.join(self.library_path, self.experiment_type,
+        #             'configs_legacy/mars_configs/') # <<<< should move to a better subfolder
+        self.stim_lib_path = stim_lib_path
 
         self.metadata = self.extract_metadata()
 
