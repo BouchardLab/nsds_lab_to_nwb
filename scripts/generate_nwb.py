@@ -1,3 +1,4 @@
+import logging.config
 import os
 
 from nsds_lab_to_nwb.nwb_builder import NWBBuilder
@@ -5,6 +6,9 @@ from nsds_lab_to_nwb.metadata.metadata_manager import MetadataManager
 
 PWD = os.path.dirname(os.path.abspath(__file__))
 USER_HOME = os.path.expanduser("~")
+
+logging.config.fileConfig(fname=str(PWD) + '/../nsds_lab_to_nwb/logging.conf', disable_existing_loggers=False)
+
 
 # --- user input and metadata for an experiment block ---
 

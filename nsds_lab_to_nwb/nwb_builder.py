@@ -1,4 +1,5 @@
 import logging.config
+import sys
 import os
 from os.path import join, exists
 import uuid
@@ -19,11 +20,14 @@ from nsds_lab_to_nwb.components.htk.htk_originator import HtkOriginator
 from nsds_lab_to_nwb.components.stimulus.stimulus_originator import StimulusOriginator
 from nsds_lab_to_nwb.components.tdt.tdt_originator import TdtOriginator
 
+# PWD = os.path.dirname(os.path.abspath(__file__))
+# logging.config.fileConfig(fname=str(PWD) + '/logging.conf', disable_existing_loggers=False)
 
-path = os.path.dirname(os.path.abspath(__file__))
+# basicConfig ignored if a filehandler is already set up (as in example scripts)
+logging.basicConfig(stream=sys.stderr)
 
-logging.config.fileConfig(fname=str(path) + '/logging.conf', disable_existing_loggers=False)
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 LOCAL_TIMEZONE = pytz.timezone('US/Pacific')
 
