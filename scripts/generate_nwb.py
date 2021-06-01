@@ -20,7 +20,8 @@ block = 'B13'
 data_path = '/clusterfs/NSDS_data/hackathon20201201/'
 
 # output path
-out_path = os.path.join(USER_HOME, 'Data/nwb_test/')
+# out_path = os.path.join(USER_HOME, 'Data/nwb_test/')
+out_path = '/clusterfs/NSDS_data/jhbak/nwb/'
 
 # link to metadata files
 block_metadata_path = os.path.join(PWD, f'../yaml/{animal_name}/{animal_name}_{block}.yaml')
