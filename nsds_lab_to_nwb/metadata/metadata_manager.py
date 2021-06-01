@@ -19,12 +19,13 @@ class MetadataManager:
                  library_path: str,
                  stim_lib_path = None,
                  block_name = None,
-                 animal_name = None
+                 animal_name = None,
+                 use_old_pipeline = None,
                  ):
         self.block_metadata_path = block_metadata_path
         self.library_path = library_path
         self.animal_name = animal_name
-        self.__detect_which_pipeline()
+        self.__detect_which_pipeline(use_old_pipeline)
 
         self.read_block_metadata_file(block_name=block_name)
         if self.animal_name is None:
@@ -37,9 +38,12 @@ class MetadataManager:
         #             'configs_legacy/mars_configs/') # <<<< should move to a better subfolder
         self.stim_lib_path = stim_lib_path
 
+    def __detect_which_pipeline(self, use_old_pipeline):
+        if (use_old_pipeline is not None) and isinstance(use_old_pipeline, bool):
+            self.use_old_pipeline = use_old_pipeline
+            return
 
-    def __detect_which_pipeline(self):
-        # detect which pipeline is used
+        # detect which pipeline is used, based on metadata format
         _, ext = os.path.splitext(self.block_metadata_path)
         if ext in ('.yaml', '.yml'):
             self.use_old_pipeline = True
