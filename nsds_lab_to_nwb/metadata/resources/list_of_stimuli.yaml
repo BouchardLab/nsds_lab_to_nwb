@@ -19,6 +19,13 @@ tone150:
     marker_path: 'Tone150/freq_resp_area_stimulus_trigger_flo500Hz_fhi32000Hz_nfreq30_natten1_nreps150_fs96000.wav'
     parameter_path: 'Tone150/freq_resp_area_stimulus_signal_flo500Hz_fhi32000Hz_nfreq30_natten1_nreps150_fs96000.mat'
 
+tonediagnostic:
+    alt_names: ['Tone diagnostic']
+    description: ''
+    audio_path: ''
+    marker_path: ''
+    parameter_path: ''
+
 timit:
     alt_names: ['Timit998']
     description: ''
@@ -45,4 +52,11 @@ dmr:
     description: ''
     audio_path: 'DMR/dmr-500flo-40000fhi-4SM-40TM-40db-96khz-48DF-15min.wav'
     marker_path: 'DMR/trig-dmr-500flo-40000fhi-4SM-40TM-40db-96khz-48DF-15min.wav'
+    parameter_path: ''
+
+nan:
+    alt_names: []
+    description: ''
+    audio_path: ''
+    marker_path: ''
     parameter_path: ''
