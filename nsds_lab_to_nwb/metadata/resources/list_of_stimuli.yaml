@@ -20,14 +20,14 @@ tone150:
     parameter_path: 'Tone150/freq_resp_area_stimulus_signal_flo500Hz_fhi32000Hz_nfreq30_natten1_nreps150_fs96000.mat'
 
 timit:
-    alt_names: []
+    alt_names: ['Timit998']
     description: ''
     audio_path: 'TIMIT/timit998s.wav'
     marker_path: 'TIMIT/timit998m.wav.wav'
     parameter_path: 'TIMIT/timit998/timit998.mat'
 
 tone:
-    alt_names: []
+    alt_names: ['Full tone']
     description: ''
     audio_path: 'Tone/stimulus_signal_03202013.wav'
     marker_path: 'Tone/stimulus_trigger_03202013.wav'
@@ -41,7 +41,7 @@ wn2:
     parameter_path: ''
 
 dmr:
-    alt_names: []
+    alt_names: ['Ripple']
     description: ''
     audio_path: 'DMR/dmr-500flo-40000fhi-4SM-40TM-40db-96khz-48DF-15min.wav'
     marker_path: 'DMR/trig-dmr-500flo-40000fhi-4SM-40TM-40db-96khz-48DF-15min.wav'
