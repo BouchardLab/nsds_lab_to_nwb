@@ -1,12 +1,10 @@
 import logging
 import os
-import csv
 import numpy as np
-import pandas as pd
 from nsds_lab_to_nwb.utils import (get_metadata_lib_path, get_stim_lib_path,
                                    split_block_folder)
 
-from nsds_lab_to_nwb.common.io import read_yaml, write_yaml, csv_to_dict
+from nsds_lab_to_nwb.common.io import read_yaml, write_yaml
 from nsds_lab_to_nwb.metadata.exp_note_reader import ExpNoteReader
 from nsds_lab_to_nwb.metadata.keymap_helper import apply_keymap
 from nsds_lab_to_nwb.metadata.resources import read_metadata_resource
@@ -22,11 +20,11 @@ class MetadataReader:
     ''' Reads metadata input for new experiments.
     '''
     def __init__(self,
-                block_metadata_path: str,
-                metadata_lib_path: str,
-                block_folder: str,
-                metadata_save_path=None,
-                ):
+                 block_metadata_path: str,
+                 metadata_lib_path: str,
+                 block_folder: str,
+                 metadata_save_path=None,
+                 ):
         self.block_metadata_path = block_metadata_path
         self.metadata_lib_path = get_metadata_lib_path(metadata_lib_path)
         self.block_folder = block_folder
@@ -106,8 +104,7 @@ class MetadataReader:
             if 'filtering' not in device_metadata[key]:
                 device_metadata[key]['filtering'] = (
                     'The signal is low pass filtered at 45 percent of the sample rate, '
-                    'and high pass filtered at 2 Hz.'
-                    )
+                    'and high pass filtered at 2 Hz.')
 
     def extra_cleanup(self):
         device_metadata = self.metadata_input['device']
@@ -129,8 +126,7 @@ class MetadataReader:
             if (ecog_lat_loc is not None) and (ecog_post_loc is not None):
                 device_metadata['ECoG']['location_details'] = (
                     f'{ecog_lat_loc} mm from lateral ridge '
-                    f'and {ecog_post_loc} mm from posterior ridge.'
-                    )
+                    f'and {ecog_post_loc} mm from posterior ridge.')
         if has_poly:
             device_metadata['Poly']['location_details'] = 'Within the ECoG grid.'
 
@@ -165,11 +161,11 @@ class LegacyMetadataReader(MetadataReader):
     ''' Reads metadata input for old experiments.
     '''
     def __init__(self,
-                block_metadata_path: str,
-                metadata_lib_path: str,
-                block_folder: str,
-                metadata_save_path=None,
-                ):
+                 block_metadata_path: str,
+                 metadata_lib_path: str,
+                 block_folder: str,
+                 metadata_save_path=None,
+                 ):
         super().__init__(block_metadata_path, metadata_lib_path,
                          block_folder, metadata_save_path)
 
@@ -200,8 +196,7 @@ class LegacyMetadataReader(MetadataReader):
         # fill in old subject information
         old_subject_input = read_metadata_resource('old_subject_metadata')
         old_subject_metadata = old_subject_input['subject_metadata']
-        old_subject_metadata['weight'] = old_subject_input['weights'].get(
-                                                    self.animal_name, 'Unknown')
+        old_subject_metadata['weight'] = old_subject_input['weights'].get(self.animal_name, 'Unknown')
         for key in old_subject_metadata:
             if key not in self.metadata_input['subject']:
                 self.metadata_input['subject'][key] = old_subject_metadata[key]
@@ -216,7 +211,7 @@ class LegacyMetadataReader(MetadataReader):
         if self.experiment_type == 'auditory':
             self.metadata_input['experiment_description'] = 'Auditory experiment'
         if ('session_description' not in self.metadata_input
-                    or len(self.metadata_input['session_description']) == 0):
+                or len(self.metadata_input['session_description']) == 0):
             self.metadata_input['session_description'] = (
                 'Auditory experiment with {} stimulus'.format(self.metadata_input['stimulus']['name']))
 
@@ -268,16 +263,16 @@ class MetadataManager:
 
         if self.legacy_block:
             self.metadata_reader = LegacyMetadataReader(
-                            block_metadata_path=self.block_metadata_path,
-                            metadata_lib_path=self.metadata_lib_path,
-                            block_folder=self.block_folder,
-                            metadata_save_path=self.metadata_save_path)
+                block_metadata_path=self.block_metadata_path,
+                metadata_lib_path=self.metadata_lib_path,
+                block_folder=self.block_folder,
+                metadata_save_path=self.metadata_save_path)
         else:
             self.metadata_reader = MetadataReader(
-                            block_metadata_path=self.block_metadata_path,
-                            metadata_lib_path=self.metadata_lib_path,
-                            block_folder=self.block_folder,
-                            metadata_save_path=self.metadata_save_path)
+                block_metadata_path=self.block_metadata_path,
+                metadata_lib_path=self.metadata_lib_path,
+                block_folder=self.block_folder,
+                metadata_save_path=self.metadata_save_path)
 
     def __detect_legacy_block(self, legacy_block=None):
         if (legacy_block is not None):
@@ -377,8 +372,8 @@ class MetadataManager:
                     device_metadata[key]['manufacturer'])
                 device_metadata[key]['description'] = (
                     f'{nchannels}-ch {key} '
-                    # f'({device_type}) '
-                    f'from {manufacturer}')
+                    f'from {manufacturer} '
+                    f'({device_type})')
 
                 # add device location if not already specified
                 if ('location' not in device_metadata[key] or
