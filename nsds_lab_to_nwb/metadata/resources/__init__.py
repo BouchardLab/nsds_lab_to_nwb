@@ -3,6 +3,7 @@ import os
 
 from nsds_lab_to_nwb.common.io import read_yaml
 
+
 def read_metadata_resource(yaml_file):
     filename, ext = os.path.splitext(yaml_file)
     if ext not in ('.yaml', '.yml', ''):

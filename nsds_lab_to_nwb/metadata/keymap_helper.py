@@ -1,5 +1,5 @@
-from nsds_lab_to_nwb.common.io import read_yaml
 from nsds_lab_to_nwb.metadata.resources import read_metadata_resource
+
 
 def _remap_and_inject(metadata_parsed, old_key, value, mapto=None):
     if mapto is None:
@@ -21,6 +21,7 @@ def _remap_and_inject(metadata_parsed, old_key, value, mapto=None):
         if new_key not in target:
             target[new_key] = {}
         target = target[new_key]
+
 
 def apply_keymap(metadata_input, keymap_file='metadata_keymap', key_for_unknown='other'):
     keymap = read_metadata_resource(keymap_file)
@@ -46,8 +47,7 @@ if __name__ == '__main__':
         'poly_type': 'cambXX',
         'ecog': 'TRUE',
         'poly': 'FALSE',
-        'notes': 'This is a test.'
-        }
+        'notes': 'This is a test.'}
     metadata_parsed = apply_keymap(metadata_input=TEST_METADATA,
                                    keymap_file='metadata_keymap')
     print(metadata_parsed)

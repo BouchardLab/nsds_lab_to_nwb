@@ -1,5 +1,5 @@
-from nsds_lab_to_nwb.common.io import read_yaml
 from nsds_lab_to_nwb.metadata.resources import read_metadata_resource
+
 
 def check_stimulus_name(stim_name_input):
     stim_directory = read_metadata_resource('list_of_stimuli')
