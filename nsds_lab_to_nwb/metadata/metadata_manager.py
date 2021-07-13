@@ -54,8 +54,10 @@ class MetadataReader:
             metadata_input = read_yaml(self.block_metadata_path)
         except FileNotFoundError:
             # first generate the block metadata file
-            experiment_path, block_metadata_file = os.path.split(self.block_metadata_path)
+            block_path_full, block_metadata_file = os.path.split(self.block_metadata_path)
+            experiment_path, _ = os.path.split(block_path_full)
             block_folder, ext = os.path.splitext(block_metadata_file)
+            logger.debug(f'Looking for an experiment note file in {experiment_path}...')
             reader = ExpNoteReader(experiment_path, block_folder)
             reader.dump_yaml(write_path=self.block_metadata_path)
             # then try reading again
