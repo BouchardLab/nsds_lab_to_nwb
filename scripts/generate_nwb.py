@@ -15,7 +15,8 @@ with path(nsds_lab_to_nwb, 'logging.conf') as fname:
 parser = argparse.ArgumentParser(description='Convert to a NWB file.')
 parser.add_argument('save_path', type=str, help='Path to save the NWB file.')
 parser.add_argument('block_folder', type=str, help='<animal>_<block> block specification.')
-parser.add_argument('block_metadata_path', type=str, help='Path to block metadata file.')
+parser.add_argument('--block_metadata_path', '-e', type=str, default=None,
+                    help='Path to block metadata file.')
 parser.add_argument('--data_path', '-d', type=str, default=None,
                     help='Path to the top level data folder.')
 parser.add_argument('--metadata_lib_path', '-m', type=str, default=None,

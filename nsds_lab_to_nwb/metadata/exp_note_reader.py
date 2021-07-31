@@ -185,12 +185,18 @@ class ExpNoteReader():
         write_path : str, optional
             Path to write yaml file, by default None
             If None writes to self.path
+        
+        Returns
+        -------
+        write_path_file : path
+            path file to written yaml
         """
         if write_path is None:
             write_path = self.path
         nsds_meta = self.get_nsds_meta()
         write_path_file = os.path.join(write_path, self.block_folder + '.yaml')
         write_yaml(write_path_file, nsds_meta, sort_keys=True)
+        return write_path_file
 
     def get_nsds_meta(self):
         """Get parsed data

@@ -68,7 +68,7 @@ class NWBBuilder:
         self.surgeon_initials, self.animal_name, self.block_name = split_block_folder(block_folder)
         self.block_folder = block_folder
         self.save_path = save_path
-        self.block_metadata_path = block_metadata_path
+        self.block_metadata_path = self._get_block_metadata_path(block_metadata_path)
         self.stim_lib_path = stim_lib_path
         self.metadata_save_path = metadata_save_path
         self.resample_data = resample_data
@@ -108,6 +108,12 @@ class NWBBuilder:
         logger.info('Extracting session start time...')
         self.session_start_time = self._extract_session_start_time()
 
+    def _get_block_metadata_path(self, path):
+        if path is None:
+            surgeon, animal, block = split_block_folder(self.block_folder)
+            path = os.path.join(self.data_path, animal)
+        return path
+    
     def _get_source_script(self):
         info = get_software_info()
         if info['git_branch'] != 'main':
