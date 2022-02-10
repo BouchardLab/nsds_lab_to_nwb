@@ -97,9 +97,9 @@ class NWBBuilder:
 
         logger.info('Creating originator instances...')
         self.electrodes_originator = ElectrodesOriginator(self.metadata)
+        self.stimulus_originator = StimulusOriginator(self.dataset, self.metadata)
         self.neural_data_originator = NeuralDataOriginator(self.dataset, self.metadata,
                                                            resample_flag=self.resample_data)
-        self.stimulus_originator = StimulusOriginator(self.dataset, self.metadata)
 
         logger.info('Extracting session start time...')
         self.session_start_time = self._extract_session_start_time()
@@ -172,7 +172,7 @@ class NWBBuilder:
             return get_default_time()
 
         # extract from TDT data
-        recorded_metadata = self.neural_data_originator.neural_data_reader.tdt_obj['info']
+        recorded_metadata = self.neural_data_originator.neural_data_reader.get_info()
         session_start_time = recorded_metadata['start_date']
         return validate_time(session_start_time)
 
@@ -235,13 +235,14 @@ class NWBBuilder:
         electrode_table_regions = self.electrodes_originator.make(nwb_content)
 
         logger.info('Adding neural data...')
-        self.neural_data_originator.make(nwb_content, electrode_table_regions)
+        tdt_reader = self.neural_data_originator.make(nwb_content, electrode_table_regions)
 
         if process_stim:
             logger.info('Adding stimulus...')
-            self.stimulus_originator.make(nwb_content)
+            self.stimulus_originator.make(nwb_content, tdt_reader=tdt_reader)
         else:
             logger.info('Skipping stimulus...')
+
 
         logger.info('NWB content built successfully.')
         return nwb_content

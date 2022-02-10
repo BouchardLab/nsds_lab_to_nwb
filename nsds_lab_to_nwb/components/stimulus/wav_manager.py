@@ -3,6 +3,7 @@ import os
 from scipy.io import wavfile
 
 from pynwb import TimeSeries
+from hdmf.backends.hdf5.h5_utils import H5DataIO
 
 from nsds_lab_to_nwb.metadata.stim_name_helper import check_stimulus_name
 from nsds_lab_to_nwb.utils import get_stim_lib_path
@@ -38,7 +39,10 @@ class WavManager():
 
         # Create the stimulus timeseries
         stim_time_series = TimeSeries(name=name,
-                                      data=stim_wav,
+                                      data=H5DataIO(stim_wav,
+                                                    compression=True,
+                                                    shuffle=True,
+                                                    fletcher32=True),
                                       starting_time=starting_time,
                                       unit='Volts',
                                       rate=rate,

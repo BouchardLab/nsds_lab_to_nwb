@@ -4,6 +4,7 @@ from pynwb.ecephys import ElectricalSeries
 from nsds_lab_to_nwb.tools.htk.htk_reader import HTKReader
 from nsds_lab_to_nwb.tools.tdt.tdt_reader import TDTReader
 from process_nwb.resample import resample
+from hdmf.backends.hdf5.h5_utils import H5DataIO
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -20,9 +21,11 @@ class NeuralDataOriginator():
         if hasattr(self.dataset, 'htk_mark_path'):
             logger.info('Using HTK')
             self.neural_data_reader = HTKReader(self.dataset.htk_path)
+            self.tdt_reader = None
         else:
             logger.info('Using TDT')
             self.neural_data_reader = TDTReader(self.dataset.tdt_path)
+            self.tdt_reader = self.neural_data_reader
 
     def make(self, nwb_content, electrode_table_regions):
         for device_name, dev_conf in self.metadata['device'].items():
@@ -49,7 +52,10 @@ class NeuralDataOriginator():
 
                 electrode_table_region = electrode_table_regions[device_name]
                 e_series = ElectricalSeries(name=device_name,
-                                            data=data,
+                                            data=H5DataIO(data,
+                                                          compression=True,
+                                                          shuffle=True,
+                                                          fletcher32=True),
                                             electrodes=electrode_table_region,
                                             starting_time=0.,
                                             rate=self._get_rate(),
@@ -62,6 +68,7 @@ class NeuralDataOriginator():
                 logger.debug(f' - Description: {description}')
                 logger.debug(f' - Comments: {comments}')
                 nwb_content.add_acquisition(e_series)
+        return self.tdt_reader
 
     def resample(self, data):
         # only resample if rate is not at nearest kHz

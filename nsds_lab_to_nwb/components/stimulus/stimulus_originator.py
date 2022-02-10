@@ -30,7 +30,7 @@ class StimulusOriginator():
         self.mark_obj_name = 'stim_onset_marks'  # 'recorded_mark' (previous name)
         self.stim_wav_obj_name = 'stim_waveform'  # 'raw_stimulus' (previous name)
 
-    def make(self, nwb_content):
+    def make(self, nwb_content, tdt_reader=None):
         stim_name = self.stim_configs['name']
         stim_type = self.stim_configs['type']  # either 'discrete' or 'continuous'
         logger.info(f'Stimulus name: {stim_name} (type: {stim_type})')
@@ -39,7 +39,8 @@ class StimulusOriginator():
         logger.info('Adding marks...')
         mark_starting_time = 0.0    # see issue #88 for discussion
         mark_time_series, mark_onsets = self.mark_manager.get_mark_track(starting_time=mark_starting_time,
-                                                                         name=self.mark_obj_name)
+                                                                         name=self.mark_obj_name,
+                                                                         tdt_reader=tdt_reader)
         nwb_content.add_stimulus(mark_time_series)
 
         # tokenize into trials, once mark track has been added to nwb_content
