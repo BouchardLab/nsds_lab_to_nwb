@@ -20,15 +20,22 @@ class TIMITTokenizer(BaseTokenizer):
 
     def _tokenize(self, stim_vals, stim_onsets,
                   *, audio_start_time, audio_end_time, rec_end_time):
-        bl_start = self.stim_configs['baseline_start']
+        # bl_gap: gap between baseline and stimulus periods
+        # (use the same value for both the pre- and post-stim baselines)
+        bl_gap = self.stim_configs['baseline_start']
+        if self.stim_configs.get('baseline_end', None) is not None:
+            raise ValueError('baseline_end is assumed to have null/None value, '
+                             'meaning that baselines extend to the ends of recoding')
 
         trial_list = []
 
         # period before the first stimulus starts
-        trial_list.append(dict(start_time=0.0,
-                               stop_time=stim_onsets[0],
-                               sb='b',
-                               sample_filename='none'))
+        stop_time = stim_onsets[0] - bl_gap
+        if stop_time > 0.0:
+            trial_list.append(dict(start_time=0.0,
+                                   stop_time=stop_time,
+                                   sb='b',
+                                   sample_filename='none'))
 
         for i, onset in enumerate(stim_onsets):
             filename = str(stim_vals[i])
@@ -42,7 +49,7 @@ class TIMITTokenizer(BaseTokenizer):
                                    sample_filename=filename))
 
         # period after the end of last stim trial until recording stops
-        start_time = audio_end_time + bl_start
+        start_time = audio_end_time + bl_gap
         if start_time < rec_end_time:
             trial_list.append(dict(start_time=start_time,
                                    stop_time=rec_end_time,

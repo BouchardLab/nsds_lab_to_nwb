@@ -18,9 +18,12 @@
 #       baseline_start: start of each in-trial baseline period, in seconds.
 #           relative to stimulus onset (for tone and wn stimuli)
 #           or relative to the end of last stimulus trial (timit and dmr).
+#           For timit and dmr, this value is also used to set a gap before
+#           the first stimulus onset.
 #       baseline_end: end of each in-trial baseline period, in seconds,
 #           relative to stimulus onset (for tone and wn stimuli).
-#           if null, last baseline extends to the end of recording (timit/dmr).
+#           If null (timit/dmr), last baseline extends to the end of recording,
+#           and initial baseline extends to the beginning of recording.
 #       first_mark: time from start of audio file to the first mark, in seconds.
 #       back_pad: time from end-of-stim to end-of-audio-file, in seconds (dmr only).
 #       mark_offset: time from mark to actual stimulus onset, in seconds.
