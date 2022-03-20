@@ -13,3 +13,8 @@ def check_stimulus_name(stim_name_input):
             if stim_name_input == alt_name:
                 return key, stim_info
     raise ValueError(f"Stimulus type '{stim_name_input}' not found.")
+
+
+def get_stimulus_metadata(stim_name_input):
+    _, stim_info = check_stimulus_name(stim_name_input)
+    return stim_info
